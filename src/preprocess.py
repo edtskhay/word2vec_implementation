@@ -7,21 +7,14 @@ sanitizer = lambda x: x.replace('‘', '').replace('…', '').replace(";", "").
 #clean_script_list = np.loadtxt("../data/hobbit1.csv", delimiter=',', usecols = 1,  skiprows = 1, dtype=str, converters = sanitizer, encoding="utf-8")
 #this sucks real bad, and doesnt detect greek punctuation so im throwing it out of the window and using a df.
 
-df = pd.read_csv("../data/hobbit1.csv", delimiter = ','); #hopefully not cheating
-clean_script_list = [sanitizer(line) for line in df["line"].tolist()]; 
 
-tokenized_script = [sentence.split() for sentence in clean_script_list] #split into 2d array of sentences split into words
-
-vocab = sorted(set(word for sentence in tokenized_script for word in sentence)) #get a sorted set of unique words
-word_to_index = {word: idx for idx, word in enumerate(vocab)} #initialize a dict, word corresponds to a value index
-
-def one_hot_generator(word, vocab_size): 
+def one_hot_generator(word, vocab_size, word_to_index): 
     one_hot = np.zeros(vocab_size)
     one_hot[word_to_index[word]] = 1 
     return one_hot
 
 def matricize_text(script_df = None):
-    clean_script_list = [sanitizer(line) for line in df["line"].tolist()]; 
+    clean_script_list = [sanitizer(line) for line in script_df["line"].tolist()]; 
     tokenized_script = [sentence.split() for sentence in clean_script_list]
     return tokenized_script
 
@@ -35,7 +28,7 @@ def generate_word_to_idx(vocab):
 def CBOW_preprocess_training_data(df, window_size = 3):
 
     tokenized_sen = matricize_text(df)
-    vocab = generate_vocab(tokenized_script)
+    vocab = generate_vocab(tokenized_sen)
     word_to_index = generate_word_to_idx(vocab)
 
     X_train = []
@@ -59,7 +52,7 @@ def CBOW_preprocess_training_data(df, window_size = 3):
             if len(context) > 0:
                 aggregated_cv /= len(context)
 
-            y_train.append(one_hot_generator(target, V)) #and append to context list to data matrix, and corresponding one hot target word rep in target list.
+            y_train.append(one_hot_generator(target, V, word_to_index)) #and append to context list to data matrix, and corresponding one hot target word rep in target list.
             X_train.append(aggregated_cv)
 
-    return np.array(X_train).T, np.array(y_train).T, vocab, word_to_index
+    return np.array(X_train), np.array(y_train), vocab, word_to_index

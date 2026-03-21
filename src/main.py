@@ -6,11 +6,15 @@ from preprocess import *
 print("Script __file__:", __file__)
 print("Script directory:", os.path.dirname(__file__))
 
-df = pd.read_csv(os.path.join(os.path.dirname(__file__), "../data/dsa.csv"), delimiter = ','); #hopefully not cheating
+print(os.path.join(os.path.dirname(__file__), "../data/hobbit1.csv"))
+csv_path = os.path.join(os.path.dirname(__file__), "../data/hobbit1.csv")
+df = pd.read_csv(csv_path, delimiter =",")
+
 print("Reading from CSV file")
 X, Y, vocab, word_to_index = CBOW_preprocess_training_data(df)
 
-nn_model = CBOW_nn()
+#nn_model = CBOW_nn_accelerated(epochs = 10000, batch_size = 50)
+nn_model = CBOW_nn_accelerated(epochs = 1000, batch_size= 10, alpha = 0.01)
 nn_model.fit(X, Y)
 
 while(True): 
@@ -29,7 +33,7 @@ while(True):
         print(f'added word: {word}')
         context_words.append(word)
 
-    aggregated_cv = np.zeros((len(vocab), 1))
+    aggregated_cv = np.zeros(1, len(vocab))
 
     for word in context_words: 
         aggregated_cv[word_to_index[word]] += 1.0 
@@ -37,4 +41,4 @@ while(True):
     aggregated_cv /= np.sum(aggregated_cv)
     prediction = nn_model.predict(aggregated_cv)
 
-    print(vocab[np.argmax(prediction.flatten(), axis = 0)])
+    print(vocab[np.argmax(prediction.flatten(), axis = 1)])
