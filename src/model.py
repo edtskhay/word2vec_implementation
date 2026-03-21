@@ -1,5 +1,8 @@
 import numpy as np
 
+class NotFittedError(ValueError, AttributeError):
+    pass
+
 class CBOW_nn: 
     def __init__(self, embedded_dim = 100, batch_size = 10, epochs = 50, alpha = 0.1): 
         self.embedded_dim = embedded_dim
@@ -13,11 +16,21 @@ class CBOW_nn:
         self.b1 = None 
 
     def fit(self, X_train, y_train):
-
-        vocab_len = X_train.shape[1]; 
-
+        vocab_len = X_train.shape[0]
         self.init_vals(vocab_len)
         self.vanilla_grad_desc(X_train, y_train)
+    
+    def predict(self, X_input): 
+        self.check_is_fitted()
+        predicted = self.forward_prop(X_input, self.W0, self.W1, self.b0, self.b1)[2]
+        return predicted
+    
+    def check_is_fitted(self):
+        if not self.is_fitted(self):
+            raise NotFittedError
+
+    def is_fitted(self):
+        return None not in (self.W0, self.W1, self.b0, self.b1)
 
     
     def init_vals(self, vocab_len): #decision to be made, pass vocab into fit, probs.
@@ -28,7 +41,7 @@ class CBOW_nn:
 
     def forward_prop(self, X, W0, W1, b0, b1):
         #X : aggregated onehot input for group of words
-        A1 = W0.T @ X + b0 #U: intermediate output, context vectors
+        A1 = W0.T @ X+ b0 #U: intermediate output, context vectors
         #no activation function on hidden layer output  
         A2 = W1.T @ A1 + b1 #Prediction between vectors 
         Y_predict= CBOW_nn.softmax(A2) #Y: apply softmax to obtain final prediction, will be plugged into loss
@@ -54,6 +67,8 @@ class CBOW_nn:
     
     def vanilla_grad_desc(self, X, Y):
         #verify that the model is fit TODO
+        self.check_is_fitted()
+
         vocab_len, M = X.shape
 
         for i in range(self.epochs): 

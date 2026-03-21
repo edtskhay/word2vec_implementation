@@ -1,7 +1,13 @@
 from model import *
+import os
 from preprocess import *
 
-df = pd.read_csv("../data/hobbit1.csv", delimiter = ','); #hopefully not cheating
+
+print("Script __file__:", __file__)
+print("Script directory:", os.path.dirname(__file__))
+
+df = pd.read_csv(os.path.join(os.path.dirname(__file__), "../data/hobbit1.csv"), delimiter = ','); #hopefully not cheating
+print("Reading from CSV file")
 X, Y, vocab, word_to_index = CBOW_preprocess_training_data(df)
 
 nn_model = CBOW_nn()
@@ -28,5 +34,7 @@ while(True):
     for word in context_words: 
         aggregated_cv[word_to_index[word]] += 1.0 
 
-    A0, A1, prediction = forward_prop(aggregated_cv, W0, W1, b0, b1)
+    aggregated_cv /= np.sum(aggregated_cv)
+    prediction = nn_model.predict(aggregated_cv)
+
     print(vocab[np.argmax(prediction.flatten(), axis = 0)])
