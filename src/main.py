@@ -6,7 +6,7 @@ from preprocess import *
 print("Script __file__:", __file__)
 print("Script directory:", os.path.dirname(__file__))
 
-df = pd.read_csv(os.path.join(os.path.dirname(__file__), "../data/hobbit1.csv"), delimiter = ','); #hopefully not cheating
+df = pd.read_csv(os.path.join(os.path.dirname(__file__), "../data/dsa.csv"), delimiter = ','); #hopefully not cheating
 print("Reading from CSV file")
 X, Y, vocab, word_to_index = CBOW_preprocess_training_data(df)
 
