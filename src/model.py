@@ -26,11 +26,11 @@ class CBOW_nn:
         return predicted
     
     def check_is_fitted(self):
-        if not self.is_fitted(self):
+        if not self.is_fitted():
             raise NotFittedError
 
     def is_fitted(self):
-        return None not in (self.W0, self.W1, self.b0, self.b1)
+        return all(v is not None for v in [self.W0, self.W1, self.b0, self.b1])
 
     
     def init_vals(self, vocab_len): #decision to be made, pass vocab into fit, probs.

@@ -52,7 +52,7 @@ def CBOW_preprocess_training_data(df, window_size = 3):
             start = max(0, i - window_size) #the start is capped to the first 
             end = min(len(sen), i + window_size) #end is capped to last element
 
-            context = [sen[j] for j in sen[start:end + 1] if j != i] #comprehension list, iterate through all words in our sublist window, keep target word out.
+            context = [sen[j] for j in range(start, end) if j != i] #comprehension list, iterate through all words in our sublist window, keep target word out.
             for word in context: 
                 aggregated_cv[word_to_index[word]] += 1.0 
 
