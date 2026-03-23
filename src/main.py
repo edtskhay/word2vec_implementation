@@ -72,7 +72,7 @@ def main(args):
         predicted_word = vocab.get_vocab_list()[np.argmax(prediction.flatten(), axis = 0)]
         print(f'With context words: {context_words}') #oh my god what is this syntax
         print(f'Predicted word: {predicted_word}')
-        print(f'Certainty = {certainty:.2f}%')
+        print(f'Certainty = {certainty:.2f}')
 
 
 parser = argparse.ArgumentParser(description='CBOW Word2Vec Prediction CLI')
