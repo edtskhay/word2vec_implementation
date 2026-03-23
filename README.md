@@ -17,9 +17,9 @@ Includes a "proof of concept" CLI to allow the user to train/load and subsequent
 
 * **Preprocessing**: Automatic generation of corpus, vocabulary and corresponding dataset given a .txt file, each line corresponding to a sentence.
 
-* **Configurablity**: Almost all parameters and configurations can be manipulated using the corresponding flag.
+* **Configurability**: Almost all parameters and configurations can be manipulated using the corresponding flag.
 
-* **Automatic model loading and export**: Model weights are exported to a specified location. Attempting to pass the same path on new run will automatically load the preexisitng waits to the model.
+* **Automatic model loading and export**: Model weights are exported to a specified location. Attempting to pass the same path on new run will automatically load the preexisitng weights to the model.
 
 ## Requirements
 
