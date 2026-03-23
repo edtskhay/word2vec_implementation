@@ -108,11 +108,11 @@ I’m not the same Hobbit I once was.
 ```
 # Potential Improvements and Extensions
 
-* Performing a softmax on the entire provided batch is a suboptimal and extremely expensive strategy. Considering d embedding dimensions, a vocabulary size of V, classic softmax evaluates to a runtime of O(d * V) per example. Hence some alternatives come to mind:
+* Performing a softmax on the entire provided batch is a suboptimal and extremely expensive strategy. Considering **d** embedding dimensions, a vocabulary size of **V** classic softmax evaluates to a runtime of **O(d * V)** per example. Hence some alternatives come to mind:
 
-    - Negative sampling, stands to decrease our runtime to O(d * (k + 1)) per example, where k + 1 corresponds to the amount of negative samples used during training, including the target word. As k, relatively speaking, is signficantly smaller than V, this modficiation would significantly accelerate training. 
+    - Negative sampling, stands to decrease our runtime to **O(d * (k + 1))** per example, where **k + 1** corresponds to the amount of negative samples used during training, including the target word. As **k**, relatively speaking, is signficantly smaller than V, this modficiation would significantly accelerate training. 
 
-    - Hierarchcal softmax, proves as another suitable alternative. Organizing the vocabulary into a huffman tree, instead of evaluating the entire list, would reduce the runtime during training to O(d * log(V)) per example. 
+    - Hierarchcal softmax, proves as another suitable alternative. Organizing the vocabulary into a huffman tree, instead of evaluating the entire list, would reduce the runtime during training to **O(d * log(V))** per example. 
 
 * Currently, only two optimizers are available, both of which rely on a constant learning rate. Incorporating simple momentum-based strategies, such as Nesterov momentum or Adam, would likely improve convergence speed during training. 
 
