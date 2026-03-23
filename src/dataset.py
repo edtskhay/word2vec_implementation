@@ -15,6 +15,19 @@ class CBOWDataset():
         self._X, self._Y= self.generate_dataset()
 
     def generate_dataset(self):
+        
+        """
+        Generates a dataset that satisfies the format of the model, namely X, Y = (example_count, vocab_size), according to the objects passed vocab and corpus attributes.
+        Function slides a window of size (window_size * 2 + 1) across each sentence in the token list. For each window the following happens: 
+            - Context words are converted into an aggregated (summed and averaged) context vector, forming an input example X 
+            - Target words (centered within the window) are encoded into a one hot vector, forming output example Y
+        
+        It is worth mentioning the sliding window accomodate the boundaries of a sentence, fewer neighbors may be available than the specified window_size.
+        
+        :return: 
+            X : A numpy array containing aggregated context vectors (example_count, vocab_size)
+            Y : A corresponding numpy array containing one hot encoded target words (example_count, vocab_size)
+        """
 
         #tokenized_sen = matricize_text(df)
         X_train = []

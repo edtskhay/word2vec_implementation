@@ -7,9 +7,8 @@ class Vocabulary:
 
     def generate_vocab(self, tokens : list[list[str]] ) -> dict[str, int]:
         """
-        Generates, through initialization, a vocabularies attribute given the tokens of a corpus
-        :param tokens: A 2D list of tokens, each entry corresponding to a list containing a sentence.
-        :return: describe what it returns
+        Generates and initializes vocabulary's attribute given the tokens of a corpus
+        :param tokens: A 2D list of tokens, each entry corresponds to a sentence, contains a list of each individual word within that sentence
         """ 
 
         self._vocab_list = sorted(set(word for sentence in tokens for word in sentence)) #get a sorted set of unique words

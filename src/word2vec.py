@@ -1,9 +1,6 @@
 import numpy as np
 from utils import *
 
-class NotFittedError(ValueError, AttributeError):
-    pass
-
 class Word2Vec:
     def __init__(self, vocab, embedded_dim : int = 100, epochs : int = 50, alpha = 0.1, batch_size = 50): 
 
@@ -103,27 +100,30 @@ class Word2Vec:
         :param X_: Input matrix of shape (batch_size, vocab_size)
         :return: 
             :predicted : Model preidction after softmax of shape(batch_size, vocab_size)
-
         """ 
         predicted = self.forward_prop(X_input)[2]
         return predicted
     
     def update(self, dLdW_hidden, dLdW_logit):
         """
-        Updates the model in single iteration using provided learning rate.
+        Incremental update of the weights of model in single iteration using provided learning rate.
 
-        :param X: Input matrix of shape (batch_size, vocab_size)
-        :param Y: True labels (one-hot encoded), shape (batch_size, vocab_size)
-        :param strategy: Strategy used to train model (ie. Vanilla Gradient Descent, Mini Batch Gradient Descent)
+        :param dLdW_hidden: Gradient w.r.t. hidden layer weights, shape (vocab_size, embedding_dim)
+        :param dLdW_logit: Gradient w.r.t. output (logit) weights, shape (embedding_dim, vocab_size)
 
         """ 
         self._W_logit -= self._alpha * dLdW_logit
         self._W_hidden -= self._alpha * dLdW_hidden
 
     def vanilla_GD(self, X, Y):
-        #verify that the model is fit TODO
-        M, vocab_len = X.shape
 
+        """
+        Performs the specified amount of epochs of vanilla gradient descent (entire dataset) on the model 
+
+        :param X: Input matrix of shape (batch_size, vocab_size)
+        :param Y: True labels (one-hot encoded), shape (batch_size, vocab_size)
+
+        """ 
         for i in range(self._epochs): 
             A1, A2, Y_predict = self.forward_prop(X)
             dLdW_hidden, dLdW_logit= self.back_prop(X, Y, Y_predict, A1)
@@ -135,7 +135,14 @@ class Word2Vec:
 
 
     def minibatch_GD(self, X, Y): 
-        print("Using mini_batch")
+
+        """
+        Performs the specified amount of epochs of mini-batch gradient descent (entire dataset) on the model, corresponding to models batch-size.
+
+        :param X: Input matrix of shape (batch_size, vocab_size)
+        :param Y: True labels (one-hot encoded), shape (batch_size, vocab_size)
+
+        """ 
         M = X.shape[0]
         batch_count = M // self._batch_size 
 
@@ -147,6 +154,7 @@ class Word2Vec:
             Y_batch_list = [Y_shuffled[j : j + self._batch_size] for j in range(0, M, self._batch_size)]
 
             for j, (X_batch, Y_batch) in enumerate(zip(X_batch_list, Y_batch_list)):
+
                 A1, A2, Y_predict = self.forward_prop(X_batch)
                 dLdW_hidden, dLdW_logit= self.back_prop(X_batch, Y_batch, Y_predict, A1)
         

@@ -24,6 +24,7 @@ def main(args):
     cbow_model = Word2Vec(vocab, args.context_dim, args.epochs, args.alpha)
 
     model_path = os.path.join(args.output, 'cbow_model.npy')
+    
     if os.path.exists(model_path):
         print('Loading existing model...')
         cbow_model.load_from_file(model_path)
