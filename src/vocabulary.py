@@ -6,6 +6,12 @@ class Vocabulary:
         self._unique_word_count = 0
 
     def generate_vocab(self, tokens : list[list[str]] ) -> dict[str, int]:
+        """
+        Generates, through initialization, a vocabularies attribute given the tokens of a corpus
+        :param tokens: A 2D list of tokens, each entry corresponding to a list containing a sentence.
+        :return: describe what it returns
+        """ 
+
         self._vocab_list = sorted(set(word for sentence in tokens for word in sentence)) #get a sorted set of unique words
         self._word_to_idx = {word: idx for idx, word in enumerate(self._vocab_list)}
         self._unique_word_count = len(self._vocab_list)

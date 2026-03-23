@@ -1,12 +1,28 @@
 import numpy as np
 
 def calculate_cat_cross_entropy(Y, Y_predict):
+
+    """
+        Calculates CCE Loss given predicted probability distribution and target one hot vectors
+        :param Y: True labels (one-hot encoded), shape (batch_size, vocab_size)
+        :param Y_predict: Predicted labels (with applied softmax prob. distrib.), shape (batch_size, vocab_size)
+
+        :return:
+            
+    """ 
     return - np.mean(np.sum(Y * np.log(Y_predict + 1e-12), axis=1))
 
 def softmax(X : np.ndarray) -> np.ndarray:
-        X_max = np.max(X, axis=1, keepdims=True)
-        e_X = np.exp(X - X_max)
-        return e_X / np.sum(e_X, axis = 1, keepdims = True)
+        
+    """
+        Calculates softmax probability distribution vector given logit inputs 
+        :param X: Input matrix (in this case coressponding to logit matrix output)
+
+    """ 
+
+    X_max = np.max(X, axis=1, keepdims=True) #retrieve row wise max value.
+    e_X = np.exp(X - X_max) #subtraction by x_max to prevent overflow, conveniently softmax(x) = softmax(x - a) where a is max value from X 
+    return e_X / np.sum(e_X, axis = 1, keepdims = True) 
 
 def print_summary(Y, Y_predict : np.ndarray, iteration : int): 
     loss = calculate_cat_cross_entropy(Y, Y_predict)

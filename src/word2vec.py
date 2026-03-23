@@ -17,46 +17,106 @@ class Word2Vec:
         self._W_logit = np.random.randn(embedded_dim, len(vocab.get_vocab_list()))
 
     def save_to_file(self, file_path : str):
+        """
+        Saves the model's weight matrices to a file for later use.
+
+        :param file_path: Path to the file where the weights will be stored.
+        """
         with open(file_path, 'wb') as f:
             np.save(f, self._W_hidden)
             np.save(f, self._W_logit)
 
     def load_from_file(self, file_path : str):
+
+        """
+        Retrieves model weights from existing file, according to provided file_path
+
+        :param file_path: Patht of file, from where we should load our weights from.
+        """ 
+        
         with open(file_path, 'rb') as f:
             self._W_hidden = np.load(f)
             self._W_logit = np.load(f)
 
     def forward_prop(self, X):
+        
+        """
+        Performs a forward pass through with the model.
+
+        :param X: Input matrix (an aggregated one-hot vector), with shape (batch_size, vocab_size)
+        
+        hidden: Hidden layer activations, shape (batch_size, embedding_dim)
+        logit: Raw output scores before softmax, shape (batch_size, vocab_size)
+        Y_predict: Predicted probabilities after softmax, shape (batch_size, vocab_size)
+        """
+
         #X : aggregated onehot input for group of words
-        hidden = X @ self._W_hidden #U: intermediate output, context vectors (A1 : (samples_count, embedded_dim))
-        logit = hidden @ self._W_logit #Prediction between vectors  (A2 : (sample_counts, vocab_size))
+        hidden = X @ self._W_hidden #U: intermediate output, context vectors (hidden : (samples_count, embedded_dim))
+        logit = hidden @ self._W_logit #Prediction between vectors  (logit : (sample_counts, vocab_size))
         Y_predict = softmax(logit) #Y: apply softmax to obtain final prediction, will be plugged into loss
         
         return hidden, logit, Y_predict
     
-    def back_prop(self, X, Y, Y_predict, hidden):
-        M = len(self._vocab.get_vocab_list())
-        dLdu = Y_predict - Y # partial deriv dL/du  (shape is (M, vocab_size))
-        dLdW_logit = (1 / M) * (hidden.T @ dLdu) #has to be same shape as w1, so (embedded, vocab)
+    def back_prop(self, X : np.ndarray, Y : np.ndarray, Y_predict : np.ndarray, hidden : np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        """
+        computes the gradients of the loss with respect to the model weights.
+
+        :param X: Input matrix of shape (batch_size, vocab_size)
+        :param Y: True labels (one-hot encoded), shape (batch_size, vocab_size)
+        :param Y_predict: Predicted probabilities, shape (batch_size, vocab_size)
+        :param hidden: Hidden layer activations, shape (batch_size, embedding_dim)
+
+        :return: 
+            dLdW_hidden: Gradient w.r.t. hidden layer weights, shape (vocab_size, embedding_dim)
+            dLdW_logit: Gradient w.r.t. output (logit) weights, shape (embedding_dim, vocab_size)
+        """ 
+
+        M = X.shape[0]
+
+        dLdu = Y_predict - Y # partial deriv dL/du  (shape is (batch_size, vocab_size))
+        dLdW_logit = (1 / M) * (hidden.T @ dLdu) #has to be same shape as w_logit, so (embedded, vocab)
         dLdW_hidden = (1 / M) * X.T @ (dLdu @ self._W_logit.T) 
 
         return dLdW_hidden, dLdW_logit
         
-    def fit_model(self, X_train : np.ndarray, y_train : np.ndarray, strategy : str):
-        vocab_len = X_train.shape[1]
+    def fit_model(self, X_train: np.ndarray, Y_train: np.ndarray, strategy : str):
 
+        """
+        Trains the model with specified strategy. 
+
+        :param X: Input matrix of shape (batch_size, vocab_size)
+        :param Y: True labels (one-hot encoded), shape (batch_size, vocab_size)
+        :param strategy: Strategy used to train model (ie. Vanilla Gradient Descent, Mini Batch Gradient Descent)
+
+        """ 
         match strategy:
             case 'vanilla':
-                return self.vanilla_GD(X_train, y_train)
+                return self.vanilla_GD(X_train, Y_train)
             case 'mini_batch':
-                return self.minibatch_GD(X_train, y_train)
+                return self.minibatch_GD(X_train, Y_train)
 
     
     def predict(self, X_input): 
+        """
+        Helper function, performs a forward prop with intention to retrieve predicted probability distrib accross vocab list
+
+        :param X_: Input matrix of shape (batch_size, vocab_size)
+        :return: 
+            :predicted : Model preidction after softmax of shape(batch_size, vocab_size)
+
+        """ 
         predicted = self.forward_prop(X_input)[2]
         return predicted
     
     def update(self, dLdW_hidden, dLdW_logit):
+        """
+        Updates the model in single iteration using provided learning rate.
+
+        :param X: Input matrix of shape (batch_size, vocab_size)
+        :param Y: True labels (one-hot encoded), shape (batch_size, vocab_size)
+        :param strategy: Strategy used to train model (ie. Vanilla Gradient Descent, Mini Batch Gradient Descent)
+
+        """ 
         self._W_logit -= self._alpha * dLdW_logit
         self._W_hidden -= self._alpha * dLdW_hidden
 

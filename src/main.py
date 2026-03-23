@@ -85,16 +85,16 @@ parser.add_argument('--output', type=str, default='./output',
                     help='Directory to save model and outputs')
 parser.add_argument('--strategy', type=str, choices=['vanilla', 'mini_batch'], default='vanilla',
                     help="Training strategy: 'vanilla' for full-batch SGD, 'mini_batch' for mini-batch SGD")
-parser.add_argument('--batchsize', type=int, default=32,
-                    help='Batch size used for mini-batch gradient descent')
+parser.add_argument('--batchsize', type=int, default=30,
+                    help='Batch size used for mini-batch gradient descent (defaults to 30)')
 parser.add_argument('--epochs', type=int, default=1000,
-                    help='Number of training epochs')
+                    help='Number of training epochs (defaults to 1000)')
 parser.add_argument('--context_dim', type=int, default=30,
-                    help='Dimension of context vector')
+                    help='Dimension of context vector (defaults to 30)')
 parser.add_argument('--alpha', type=float, default=0.01,
-                    help='Learning rate for model updates')
+                    help='Learning rate for model updates (defaults to 0.01)')
 parser.add_argument('--window', type=int, default=3,
-                    help='Number of context words on each side of target word')
+                    help='Number of context words on each side of target word (defaults to 3)')
 args = parser.parse_args()
 
 if __name__ == '__main__': 
