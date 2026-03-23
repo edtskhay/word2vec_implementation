@@ -7,13 +7,14 @@ sanitizer = lambda x: x.replace('‘', '').replace('…', '').replace(";", "").
 #clean_script_list = np.loadtxt("../data/hobbit1.csv", delimiter=',', usecols = 1,  skiprows = 1, dtype=str, converters = sanitizer, encoding="utf-8")
 #this sucks real bad, and doesnt detect greek punctuation so im throwing it out of the window and using a df.
 
-
 def one_hot_generator(word, vocab_size, word_to_index): 
+    
     one_hot = np.zeros(vocab_size)
     one_hot[word_to_index[word]] = 1 
     return one_hot
 
 def matricize_text(script_df = None):
+
     clean_script_list = [sanitizer(line) for line in script_df["line"].tolist()]; 
     tokenized_script = [sentence.split() for sentence in clean_script_list]
     return tokenized_script
@@ -23,7 +24,6 @@ def generate_vocab(tokenized_script):
 
 def generate_word_to_idx(vocab): 
     return {word: idx for idx, word in enumerate(vocab)}
-
 
 def CBOW_preprocess_training_data(df, window_size = 3):
 
