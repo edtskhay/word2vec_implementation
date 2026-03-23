@@ -73,10 +73,10 @@ To exit the program, type **END**, without having added any context words.
 python main.py corpus.txt
 ```
 
-**2. Specify output directory:**
+**2. Specify output directory and file:**
 
 ```bash
-python main.py corpus.txt --output ./my_model
+python main.py corpus.txt --output_dir ./my_model --output_file cbow_model
 ```
 
 **3. Mini-batch training with batch size 50:**
