@@ -56,7 +56,7 @@ To exit the program, type **END**, without having added any context words.
 | Flag            | Type  | Default         | Description                                                                                  |
 |-----------------|-------|----------------|----------------------------------------------------------------------------------------------|
 | `--output_dir`  | str   | `./output`     | Directory to save the trained model weights.                                                 |
-| `--output_name` | str   | `cbow_model` | Name of the output file to which trained model will be saved to.                                            |
+| `--output_name` | str   | `cbow_model` | Name of the output file to which trained model will be saved to.                               |
 | `--strategy`    | str   | `vanilla`      | Training strategy: `'vanilla'` for full-batch SGD, `'mini_batch'` for mini-batch SGD.       |
 | `--batchsize`   | int   | 30             | Batch size used for mini-batch gradient descent.                                             |
 | `--epochs`      | int   | 1000           | Number of training epochs.                                                                   |
