@@ -55,15 +55,15 @@ To exit the program, type **END**, without having added any context words.
 
 | Flag            | Type  | Default         | Description                                                                                  |
 |-----------------|-------|----------------|----------------------------------------------------------------------------------------------|
-| `--output_dir`  | str   | `./output`     | Directory to save the trained model weights.                                                 |
-| `--output_name` | str   | `cbow_model`   | Name of the output file to which trained model will be saved.                                |
-| `--strategy`    | str   | `vanilla`      | Training strategy: `'vanilla'` for full-batch SGD, `'mini_batch'` for mini-batch SGD.       |
+| `--output_dir`  | str   | `./output`     | Directory of the output file to which trained model will be saved to.                                                |
+| `--output_name` | str   | `cbow_model`   | Name of the output file to which trained model will be saved to.                             |
+| `--strategy`    | str   | `vanilla`      | Training strategy: `'vanilla'` for full-batch SGD, `'mini_batch'` for mini-batch SGD.        |
 | `--batchsize`   | int   | 30             | Batch size used for mini-batch gradient descent.                                             |
 | `--epochs`      | int   | 1000           | Number of training epochs.                                                                   |
 | `--context_dim` | int   | 30             | Dimension of the context vector.                                                             |
 | `--alpha`       | float | 0.01           | Learning rate for model updates.                                                             |
 | `--window`      | int   | 3              | Number of context words on each side of the target word.                                     |
-| `file`          | str   | *required*     | Target text file to act as the corpus.                                                      |
+| `file`          | str   | *required*     | Target text file to act as the corpus.                                                       |
 
 ### Examples
 
@@ -76,7 +76,7 @@ python main.py corpus.txt
 **2. Specify output directory and file:**
 
 ```bash
-python main.py corpus.txt --output_dir ./my_model --output_file cbow_model
+python main.py corpus.txt --output_dir ./my_model --output_file
 ```
 
 **3. Mini-batch training with batch size 50:**
