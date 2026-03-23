@@ -63,7 +63,6 @@ To exit the program, type **END**, without having added any context words.
 | `--context_dim` | int   | 30             | Dimension of the context vector.                                                             |
 | `--alpha`       | float | 0.01           | Learning rate for model updates.                                                             |
 | `--window`      | int   | 3              | Number of context words on each side of the target word.                                     |
-| `file`          | str   | *required*     | Target text file to act as the corpus.                                                       |
 
 ### Examples
 
