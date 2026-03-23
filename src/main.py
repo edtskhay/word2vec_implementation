@@ -2,7 +2,6 @@ import os
 import argparse
 
 from word2vec import *
-from preprocess import *
 from corpus import *
 from vocabulary import *
 from dataset import *
@@ -83,8 +82,6 @@ parser.add_argument('file', type=str,
 
 # Optional arguments with defaults
 parser.add_argument('--output', type=str, default='./output',
-                    help='Directory to save model and outputs')
-parser.add_argument('--retrain', type=bool, default='true',
                     help='Directory to save model and outputs')
 parser.add_argument('--strategy', type=str, choices=['vanilla', 'mini_batch'], default='vanilla',
                     help="Training strategy: 'vanilla' for full-batch SGD, 'mini_batch' for mini-batch SGD")
