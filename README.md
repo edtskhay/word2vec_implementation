@@ -31,7 +31,6 @@ Install dependencies:
 ```bash
 pip install numpy
 ```
----
 
 ## Usage
 
@@ -54,17 +53,18 @@ To exit the program, type **END**, without having added any context words.
 
 ### Optional Arguments
 
-| Flag          | Type  | Default      | Description                                                        |
-|---------------|-------|-------------|--------------------------------------------------------------------|
-| `--output`    | str   | `./output`  | Directory to save the trained model and outputs                   |
-| `--strategy`  | str   | `vanilla`   | Training strategy: `'vanilla'` for full-batch SGD, `'mini_batch'` for mini-batch SGD |
-| `--batchsize` | int   | 30          | Batch size for mini-batch gradient descent                          |
-| `--epochs`    | int   | 1000        | Number of training epochs                                           |
-| `--context_dim` | int | 30          | Dimension of context vectors                                        |
-| `--alpha`     | float | 0.01        | Learning rate for model updates                                     |
-| `--window`    | int   | 3           | Number of context words on each side of the target word            |
+| Flag            | Type  | Default         | Description                                                                                  |
+|-----------------|-------|----------------|----------------------------------------------------------------------------------------------|
+| `--output_dir`  | str   | `./output`     | Directory to save the trained model weights.                                                 |
+| `--output_name` | str   | `cbow_model` | Name of the output file to which trained model will be saved to.                                            |
+| `--strategy`    | str   | `vanilla`      | Training strategy: `'vanilla'` for full-batch SGD, `'mini_batch'` for mini-batch SGD.       |
+| `--batchsize`   | int   | 30             | Batch size used for mini-batch gradient descent.                                             |
+| `--epochs`      | int   | 1000           | Number of training epochs.                                                                   |
+| `--context_dim` | int   | 30             | Dimension of the context vector.                                                             |
+| `--alpha`       | float | 0.01           | Learning rate for model updates.                                                             |
+| `--window`      | int   | 3              | Number of context words on each side of the target word.                                     |
+| `file`          | str   | *required*     | Target text file to act as the corpus.                                                      |
 
----
 ### Examples
 
 **1. Basic usage with defaults:**
@@ -95,8 +95,6 @@ python main.py corpus.txt \
     --context_dim 50
 ```
 
----
-
 ### Corpus Format
 
 - The corpus should be a plain text file (`.txt`).  
@@ -109,8 +107,14 @@ You asked me once if I had told you everything there was to know about my advent
 I am old now, Frodo.
 I’m not the same Hobbit I once was.
 ```
-## Improvements and Extensions
+# Potential Improvements and Extensions
 
-* 
+* Performing a softmax on the entire provided batch is a suboptimal and extremely expensive strategy. Considering d embedding dimensions, a vocabulary size of V, classic softmax evaluates to a runtime of O(d * V) per example. Hence some alternatives come to mind:
 
-# References 
+    - Negative sampling, stands to decrease our runtime to O(d * (k + 1)) per example, where k + 1 corresponds to the amount of negative samples used during training, including the target word. As k, relatively speaking, is signficantly smaller than V, this modficiation would significantly accelerate training. 
+
+    - Hierarchcal softmax, proves as another suitable alternative. Organizing the vocabulary into a huffman tree, instead of evaluating the entire list, would reduce the runtime of training to O(d * log(V)) per example. 
+
+* Currently, only two optimizers are available, both of which rely on a constant learning rate. Incorporating simple momentum-based strategies, such as Nesterov momentum or Adam, would likely improve convergence speed during training. 
+
+* Evaluation could be further enhanced with the generation of simple visualization. Plots of loss curves, accuracy trends across the training time would not only serve to build a more complete project, but allow me to ultimately tune the many configurable hyperparameters I have introduced in a more streamlined manner.

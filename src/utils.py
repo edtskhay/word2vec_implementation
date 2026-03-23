@@ -54,7 +54,7 @@ def print_summary(Y, Y_predict : np.ndarray, iteration : int):
     top_1_accuracy = np.mean(correct_in_1)
 
     print(f'Iteration: {iteration}')
-    print(f'Categorical Cross Entropy Loss: {loss:.5f}')
+    print(f'CCE Loss: {loss:.5f}')
     print(f'Target in Top 1 Accuracy: {top_1_accuracy:.5f}')
     print(f'Target in Top 5 Accuracy: {top_5_accuracy:.5f}')
     print(f'Target in Top 10 Accuracy: {top_10_accuracy:.5f}')

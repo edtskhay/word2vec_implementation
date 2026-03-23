@@ -23,15 +23,15 @@ def main(args):
 
     cbow_model = Word2Vec(vocab, args.context_dim, args.epochs, args.alpha)
 
-    model_path = os.path.join(args.output, 'cbow_model.npy')
-    
+    model_path = os.path.join(args.output_dir, args.output_name + '.npy')
+
     if os.path.exists(model_path):
         print('Loading existing model...')
         cbow_model.load_from_file(model_path)
     else:
         print('Training model...')
         cbow_model.fit_model(dataset.get_X(), dataset.get_Y(), args.strategy)
-        os.makedirs(args.output, exist_ok=True)
+        os.makedirs(args.output_dir, exist_ok=True)
         cbow_model.save_to_file(model_path)
         print(f'Model saved to {model_path}')
     
@@ -70,7 +70,7 @@ def main(args):
         prediction = cbow_model.predict(aggregated_cv)
         certainty = np.max(prediction.flatten(), axis = 0)
         predicted_word = vocab.get_vocab_list()[np.argmax(prediction.flatten(), axis = 0)]
-        print(f'With context words: {*context_words,}') #oh my god what is this syntax
+        print(f'With context words: {context_words}') #oh my god what is this syntax
         print(f'Predicted word: {predicted_word}')
         print(f'Certainty = {certainty:.2f}%')
 
@@ -82,8 +82,10 @@ parser.add_argument('file', type=str,
                     help='Target (txt) file to act as corpus')
 
 # Optional arguments with defaults
-parser.add_argument('--output', type=str, default='./output',
-                    help='Directory to save model and outputs')
+parser.add_argument('--output_dir', type=str, default='./output',
+                    help='Directory of the output file to which trained model will be saved to.')
+parser.add_argument('--output_name', type=str, default='cbow_model',
+                    help='Name of the output file to which trained model will be saved to.')
 parser.add_argument('--strategy', type=str, choices=['vanilla', 'mini_batch'], default='vanilla',
                     help="Training strategy: 'vanilla' for full-batch SGD, 'mini_batch' for mini-batch SGD")
 parser.add_argument('--batchsize', type=int, default=30,
